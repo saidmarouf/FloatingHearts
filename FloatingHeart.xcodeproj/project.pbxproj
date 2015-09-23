@@ -14,6 +14,8 @@
 		A1E727E71BB1466000C387F2 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A1E727E51BB1466000C387F2 /* LaunchScreen.storyboard */; };
 		A1E727F21BB1466000C387F2 /* FloatingHeartTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1E727F11BB1466000C387F2 /* FloatingHeartTests.swift */; };
 		A1E727FD1BB1466000C387F2 /* FloatingHeartUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1E727FC1BB1466000C387F2 /* FloatingHeartUITests.swift */; };
+		A1E7280D1BB146A400C387F2 /* HeartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1E7280C1BB146A400C387F2 /* HeartView.swift */; settings = {ASSET_TAGS = (); }; };
+		A1E7280F1BB20A8100C387F2 /* Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1E7280E1BB20A8100C387F2 /* Helpers.swift */; settings = {ASSET_TAGS = (); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -47,6 +49,8 @@
 		A1E727F81BB1466000C387F2 /* FloatingHeartUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = FloatingHeartUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		A1E727FC1BB1466000C387F2 /* FloatingHeartUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FloatingHeartUITests.swift; sourceTree = "<group>"; };
 		A1E727FE1BB1466000C387F2 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		A1E7280C1BB146A400C387F2 /* HeartView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HeartView.swift; sourceTree = "<group>"; };
+		A1E7280E1BB20A8100C387F2 /* Helpers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Helpers.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -98,7 +102,9 @@
 			isa = PBXGroup;
 			children = (
 				A1E727DC1BB1466000C387F2 /* AppDelegate.swift */,
-				A1E727DE1BB1466000C387F2 /* ViewController.swift */,
+				A1E7280E1BB20A8100C387F2 /* Helpers.swift */,
+				A1E7280A1BB1467100C387F2 /* ViewControllers */,
+				A1E7280B1BB1467F00C387F2 /* Views */,
 				A1E727E01BB1466000C387F2 /* Main.storyboard */,
 				A1E727E31BB1466000C387F2 /* Assets.xcassets */,
 				A1E727E51BB1466000C387F2 /* LaunchScreen.storyboard */,
@@ -123,6 +129,22 @@
 				A1E727FE1BB1466000C387F2 /* Info.plist */,
 			);
 			path = FloatingHeartUITests;
+			sourceTree = "<group>";
+		};
+		A1E7280A1BB1467100C387F2 /* ViewControllers */ = {
+			isa = PBXGroup;
+			children = (
+				A1E727DE1BB1466000C387F2 /* ViewController.swift */,
+			);
+			name = ViewControllers;
+			sourceTree = "<group>";
+		};
+		A1E7280B1BB1467F00C387F2 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				A1E7280C1BB146A400C387F2 /* HeartView.swift */,
+			);
+			name = Views;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -256,6 +278,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				A1E727DF1BB1466000C387F2 /* ViewController.swift in Sources */,
+				A1E7280F1BB20A8100C387F2 /* Helpers.swift in Sources */,
+				A1E7280D1BB146A400C387F2 /* HeartView.swift in Sources */,
 				A1E727DD1BB1466000C387F2 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
