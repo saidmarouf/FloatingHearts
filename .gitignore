@@ -1,0 +1,14 @@
+.DS_Store
+
+.xcodeproj/ !*.xcodeproj/project.pbxproj
+xcuserdata
+
+# Xcode
+**/build/*
+*.pbxuser
+!default.pbxuser
+*.xcworkspace
+!default.xcworkspace
+xcuserdata
+profile
+DerivedData
