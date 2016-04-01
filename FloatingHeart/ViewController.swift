@@ -7,11 +7,14 @@
 //
 
 import UIKit
-import Foundation
 
 class ViewController: UIViewController {
 
-    let heartSize: CGFloat = 36
+    private struct HeartAttributes {
+        static let heartSize: CGFloat = 36
+        static let burstDelay: NSTimeInterval = 0.1
+    }
+
     var burstTimer: NSTimer?
 
     override func viewDidLoad() {
@@ -28,10 +31,9 @@ class ViewController: UIViewController {
     }
     
     func didLongPress(longPressGesture: UILongPressGestureRecognizer) {
-
         switch longPressGesture.state {
         case .Began:
-            burstTimer = NSTimer.scheduledTimerWithTimeInterval(0.2, target: self, selector: "showTheLove:", userInfo: nil, repeats: true)
+            burstTimer = NSTimer.scheduledTimerWithTimeInterval(HeartAttributes.burstDelay, target: self, selector: "showTheLove:", userInfo: nil, repeats: true)
         case .Ended, .Cancelled:
             burstTimer?.invalidate()
         default:
@@ -40,15 +42,12 @@ class ViewController: UIViewController {
     }
 
     func showTheLove(gesture: UITapGestureRecognizer?) {
-        let heart = HeartView(frame: CGRectMake(0, 0, heartSize, heartSize))
+        let heart = HeartView(frame: CGRectMake(0, 0, HeartAttributes.heartSize, HeartAttributes.heartSize))
         view.addSubview(heart)
-        let fountainSource = CGPointMake(20 + heartSize/2.0, self.view.bounds.height - heartSize/2.0 - 10)
-        heart.center = fountainSource
-        heart.animateInView(self.view)
+        let fountainX = HeartAttributes.heartSize / 2.0 + 20
+        let fountainY = view.bounds.height - HeartAttributes.heartSize / 2.0 - 10
+        heart.center = CGPoint(x: fountainX, y: fountainY)
+        heart.animateInView(view)
     }
 
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
 }

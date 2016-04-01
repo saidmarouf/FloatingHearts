@@ -9,7 +9,7 @@
 import UIKit
 import Foundation
 
-//MARK :- Themes
+// MARK: Themes
 
 struct HeartTheme {
     let fillColor: UIColor
@@ -26,87 +26,109 @@ struct HeartTheme {
         (UIColor(hex: 0x39d3d3), UIColor(white: 1.0, alpha: 0.8)),
         (UIColor(hex: 0xfed301), UIColor(white: 1.0, alpha: 0.8))
     ]
-    ///return random theme from selection above
+
     static func randomTheme() -> HeartTheme {
         let r = Int(randomNumber(availableThemes.count))
-        return HeartTheme(fillColor: availableThemes[r].0, strokeColor: availableThemes[r].1)
+        let theme = availableThemes[r]
+        return HeartTheme(fillColor: theme.0, strokeColor: theme.1)
     }
 }
 
+// MARK: HeartView
 
-//MARK :- HeartView
+enum RotationDirection: CGFloat {
+    case Left = -1
+    case Right = 1
+}
 
 let PI = CGFloat(M_PI)
 
 class HeartView: UIView {
 
+    private struct Durations {
+        static let Full: NSTimeInterval = 4.0
+        static let Bloom: NSTimeInterval = 0.5
+    }
+
     override init(frame: CGRect) {
         super.init(frame: frame)
-        
         backgroundColor = UIColor.clearColor()
-        layer.anchorPoint = CGPointMake(0.5, 1) //mid-bottom
+        layer.anchorPoint = CGPoint(x: 0.5, y: 1)
     }
 
     required init?(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
+        super.init(coder: aDecoder)
     }
-    
-    ///Perform the floating heart animation.
-    ///Many of the values were adjusted to feel as nice and as close as possible to Periscope's.
-    ///You should play around with different values to suit your specific use-case.
+
+    // MARK: Animations
+
     func animateInView(view: UIView) {
-        
-        let totalAnimationDuration: NSTimeInterval = 6
-        let heartSize = CGRectGetWidth(self.bounds)
-        let heartCenterX = self.center.x
-        let viewHeight = CGRectGetHeight(view.bounds)
-        
-        //Pre-Animation setup
-        self.transform = CGAffineTransformMakeScale(0, 0)
-        self.alpha = 0
-        
-        //Bloom
-        spring(0.5, delay: 0.0, damping: 0.6, velocity: 0.8) {
+        guard let rotationDirection = RotationDirection(rawValue: CGFloat(1 - Int(2 * randomNumber(2)))) else { return }
+        prepareForAnimation()
+        performBloomAnimation()
+        performSlightRotationAnimation(rotationDirection)
+        addPathAnimation(inView: view)
+    }
+
+    private func prepareForAnimation() {
+        transform = CGAffineTransformMakeScale(0, 0)
+        alpha = 0
+    }
+
+    private func performBloomAnimation() {
+        spring(Durations.Bloom, delay: 0.0, damping: 0.6, velocity: 0.8) {
             self.transform = CGAffineTransformIdentity
             self.alpha = 0.9
         }
+    }
 
-        //Slight rotation
-        let rotationDirection: Int = (1 - Int(2*randomNumber(2))) // -1 OR 1
+    private func performSlightRotationAnimation(direction: RotationDirection) {
         let rotationFraction = randomNumber(10)
-        animate(totalAnimationDuration, delay: 0) {
-            self.transform = CGAffineTransformMakeRotation(CGFloat(rotationDirection) * PI/(16 + rotationFraction*0.2))
+        animate(Durations.Full, delay: 0) {
+            self.transform = CGAffineTransformMakeRotation(direction.rawValue * PI / (16 + rotationFraction * 0.2))
         }
-        
-        
-        //Travel along path
-        let heartTravelPath = UIBezierPath()
-        heartTravelPath.moveToPoint(self.center)
-        
+    }
+
+    private func travelPath(inView view: UIView) -> UIBezierPath? {
+        guard let endPointDirection = RotationDirection(rawValue: CGFloat(1 - Int(2 * randomNumber(2)))) else { return nil }
+
+        let heartCenterX = center.x
+        let heartSize = bounds.width
+        let viewHeight = view.bounds.height
+
         //random end point
-        let endPoint = CGPointMake(heartCenterX + (CGFloat(rotationDirection) * randomNumber(2*heartSize)), viewHeight/6.0 + randomNumber(viewHeight/4.0))
-        
+        let endPointX = heartCenterX + (endPointDirection.rawValue * randomNumber(2 * heartSize))
+        let endPointY = viewHeight / 8.0 + randomNumber(viewHeight / 4.0)
+        let endPoint = CGPoint(x: endPointX, y: endPointY)
+
         //random Control Points
-        let travelDirection: Int = (1 - Int(2*randomNumber(2))) // -1 OR 1
-        
-        //randomize x and y for control points
-        let xDelta = (heartSize/2.0 + randomNumber(2*heartSize)) * CGFloat(travelDirection)
-        let yDelta = max(endPoint.y ,max(randomNumber(8*heartSize), heartSize))
-        
-        let controlPoint1 = CGPointMake(heartCenterX + xDelta, viewHeight - yDelta)
-        let controlPoint2 = CGPointMake(heartCenterX - 2*xDelta, yDelta)
-        
-        heartTravelPath.addCurveToPoint(endPoint, controlPoint1: controlPoint1, controlPoint2: controlPoint2)
-        
+        let travelDirection = CGFloat(1 - Int(2 * randomNumber(2)))
+        let xDelta = (heartSize / 2.0 + randomNumber(2 * heartSize)) * travelDirection
+        let yDelta = max(endPoint.y ,max(randomNumber(8 * heartSize), heartSize))
+        let controlPoint1 = CGPoint(x: heartCenterX + xDelta, y: viewHeight - yDelta)
+        let controlPoint2 = CGPoint(x: heartCenterX - 2 * xDelta, y: yDelta)
+
+        let path = UIBezierPath()
+        path.moveToPoint(center)
+        path.addCurveToPoint(endPoint, controlPoint1: controlPoint1, controlPoint2: controlPoint2)
+        return path
+    }
+
+    private func addPathAnimation(inView view: UIView) {
+        guard let heartTravelPath = travelPath(inView: view) else { return }
         let keyFrameAnimation = CAKeyframeAnimation(keyPath: "position")
         keyFrameAnimation.path = heartTravelPath.CGPath
         keyFrameAnimation.timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionLinear)
-        keyFrameAnimation.duration = totalAnimationDuration + NSTimeInterval(endPoint.y/viewHeight)
-        self.layer.addAnimation(keyFrameAnimation, forKey: "positionOnPath")
-        
-        
-        //Alpha
-        animate(totalAnimationDuration, delay: 0,
+        let durationAdjustment = 4 * NSTimeInterval(heartTravelPath.bounds.height / view.bounds.height)
+        let duration = Durations.Full + durationAdjustment
+        keyFrameAnimation.duration = duration
+        layer.addAnimation(keyFrameAnimation, forKey: "positionOnPath")
+
+        animateToFinalAlpha(withDuration: duration)
+    }
+
+    private func animateToFinalAlpha(withDuration duration: NSTimeInterval = Durations.Full) {
+        animate(duration, delay: 0,
             animations: {
                 self.alpha = 0.0
             },
@@ -115,14 +137,12 @@ class HeartView: UIView {
             }
         )
     }
-    
-    
+
     override func drawRect(rect: CGRect) {
 
 #if true
 
         let theme = HeartTheme.randomTheme()
-    
         let heartImage = UIImage(named: "heart")
         let heartImageBorder = UIImage(named: "heartBorder")
     
@@ -153,23 +173,23 @@ class HeartView: UIView {
         let heartPath = UIBezierPath()
         
         //Start at bottom heart tip
-        let tipLocation = CGPointMake(floor(CGRectGetWidth(rect) / 2.0), CGRectGetHeight(rect) - drawingPadding)
+        let tipLocation = CGPoint(x: floor(CGRectGetWidth(rect) / 2.0), y: CGRectGetHeight(rect) - drawingPadding)
         heartPath.moveToPoint(tipLocation)
         
         //Move to top left start of curve
-        let topLeftCurveStart = CGPointMake(drawingPadding, floor(CGRectGetHeight(rect) / 2.4))
-        heartPath.addQuadCurveToPoint(topLeftCurveStart, controlPoint: CGPointMake(topLeftCurveStart.x, topLeftCurveStart.y + curveRadius))
+        let topLeftCurveStart = CGPoint(x: drawingPadding, y: floor(CGRectGetHeight(rect) / 2.4))
+        heartPath.addQuadCurveToPoint(topLeftCurveStart, controlPoint: CGPoint(x: topLeftCurveStart.x, y: topLeftCurveStart.y + curveRadius))
         
         //Create top left curve
-        heartPath.addArcWithCenter(CGPointMake(topLeftCurveStart.x + curveRadius, topLeftCurveStart.y), radius: curveRadius, startAngle: PI, endAngle: 0, clockwise: true)
+        heartPath.addArcWithCenter(CGPoint(x: topLeftCurveStart.x + curveRadius, y: topLeftCurveStart.y), radius: curveRadius, startAngle: PI, endAngle: 0, clockwise: true)
         
         //Create top right curve
-        let topRightCurveStart = CGPointMake(topLeftCurveStart.x + 2*curveRadius, topLeftCurveStart.y)
-        heartPath.addArcWithCenter(CGPointMake(topRightCurveStart.x + curveRadius, topRightCurveStart.y), radius: curveRadius, startAngle: PI, endAngle: 0, clockwise: true)
+        let topRightCurveStart = CGPoint(x: topLeftCurveStart.x + 2*curveRadius, y: topLeftCurveStart.y)
+        heartPath.addArcWithCenter(CGPoint(x: topRightCurveStart.x + curveRadius, y: topRightCurveStart.y), radius: curveRadius, startAngle: PI, endAngle: 0, clockwise: true)
         
         //Final curve to bottom heart tip
-        let topRightCurveEnd = CGPointMake(topLeftCurveStart.x + 4*curveRadius, topRightCurveStart.y)
-        heartPath.addQuadCurveToPoint(tipLocation, controlPoint: CGPointMake(topRightCurveEnd.x, topRightCurveEnd.y + curveRadius))
+        let topRightCurveEnd = CGPoint(x: topLeftCurveStart.x + 4*curveRadius, y: topRightCurveStart.y)
+        heartPath.addQuadCurveToPoint(tipLocation, controlPoint: CGPoint(x: topRightCurveEnd.x, y: topRightCurveEnd.y + curveRadius))
         
         heartPath.fill()
         

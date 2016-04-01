@@ -12,7 +12,7 @@ import UIKit
 ///Hoping to demonstrate how these helpers can be useful in any project.
 ///For the sake of this example, they can be seen as an overkill. But we're having fun.
 
-//MARK:- Color Helpers
+// MARK: Color Helpers
 
 extension UIColor {
     
@@ -26,7 +26,7 @@ extension UIColor {
 }
 
 
-//MARK:- Timer Helpers
+// MARK: Timer Helpers
 
 //Stripped down extension - similar to SwiftTimer https://github.com/radex/SwiftyTimer
 private class TimerActor {
@@ -57,7 +57,7 @@ extension NSTimer {
 }
 
 
-//MARK:- Animaition Helpers
+// MARK: Animaition Helpers
 
 public func spring(duration: NSTimeInterval, delay: NSTimeInterval, damping: CGFloat, velocity: CGFloat, animations: () -> Void) {
     
@@ -83,7 +83,7 @@ public func animate(duration: NSTimeInterval, delay: NSTimeInterval, animations:
     })
 }
 
-//MARK:- Math Helpers
+// MARK: Math Helpers
 
 //Briefly investigated creating a generic function to accept various numeric types. 
 //Seems too much work at this stage. For another time...
