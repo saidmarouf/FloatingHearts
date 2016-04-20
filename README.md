@@ -7,7 +7,6 @@ Example showing how to recreate the floating hearts animation on Periscope.
 ![Demo](https://github.com/saidmarouf/FloatingHearts/blob/master/hearts.gif)
 
 #Info
-Written in Swift 2.0.<br />
 Requires Xcode 7<br />
 This is an example and not yet provided as an installable Pod. Mostly implemented as a fun exercise.<br />
 
