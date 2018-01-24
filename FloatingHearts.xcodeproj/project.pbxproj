@@ -166,6 +166,7 @@
 				TargetAttributes = {
 					A1A867701CC82E5C001BBB2D = {
 						CreatedOnToolsVersion = 7.3;
+						LastSwiftMigration = 0920;
 					};
 					A1A8677F1CC82E83001BBB2D = {
 						CreatedOnToolsVersion = 7.3;
@@ -296,6 +297,7 @@
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";
@@ -337,6 +339,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
+				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
 				VERSIONING_SYSTEM = "apple-generic";
@@ -359,6 +362,8 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_SWIFT3_OBJC_INFERENCE = On;
+				SWIFT_VERSION = 4.0;
 			};
 			name = Debug;
 		};
@@ -376,6 +381,8 @@
 				PRODUCT_BUNDLE_IDENTIFIER = net.saidmarouf.FloatingHearts;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
+				SWIFT_SWIFT3_OBJC_INFERENCE = On;
+				SWIFT_VERSION = 4.0;
 			};
 			name = Release;
 		};
@@ -420,6 +427,7 @@
 				A1A8677B1CC82E5C001BBB2D /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		A1A8678F1CC82E83001BBB2D /* Build configuration list for PBXNativeTarget "FloatingHeartsExample" */ = {
 			isa = XCConfigurationList;
@@ -428,6 +436,7 @@
 				A1A867911CC82E83001BBB2D /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
