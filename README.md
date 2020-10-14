@@ -18,3 +18,6 @@ Provide as a reusable Pod
 <br />
 Get in touch and lets discuss how to improve this further!
 Find me on Twitter <a href='http://twitter.com/saidmarouf'>@saidmarouf</a>
+
+# License
+FloatingHearts is released under the MIT license. See [LICENSE](https://github.com/saidmarouf/FloatingHearts/blob/master/LICENSE) for details.
