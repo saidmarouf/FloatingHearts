@@ -33,7 +33,7 @@ private class TimerActor {
     
     let fireBlock: (() -> Void)
     
-    init(_ block: () -> Void) {
+    init(_ block: @escaping () -> Void) {
         fireBlock = block
     }
     
@@ -42,16 +42,16 @@ private class TimerActor {
     }
 }
 
-extension NSTimer {
+extension Timer {
     
-    public class func new(interval: NSTimeInterval, block: (() -> Void)) -> NSTimer {
+    public class func new(interval: TimeInterval, block: @escaping (() -> Void)) -> Timer {
         let timerActor = TimerActor(block)
         return self.init(timeInterval: interval, target: timerActor, selector: #selector(fire), userInfo: nil, repeats: false)
     }
     
-    public static func after(interval: NSTimeInterval, block: (() -> Void)) -> NSTimer {
-        let timer = NSTimer.new(interval, block: block)
-        NSRunLoop.currentRunLoop().addTimer(timer, forMode: NSRunLoopCommonModes)
+    public static func after(interval: TimeInterval, block: @escaping (() -> Void)) -> Timer {
+        let timer = Timer.new(interval: interval, block: block)
+        RunLoop.current.add(timer, forMode: RunLoop.Mode.common)
         return timer
     }
 }
@@ -59,25 +59,25 @@ extension NSTimer {
 
 // MARK: Animaition Helpers
 
-public func spring(duration: NSTimeInterval, delay: NSTimeInterval, damping: CGFloat, velocity: CGFloat, animations: () -> Void) {
+public func spring(duration: TimeInterval, delay: TimeInterval, damping: CGFloat, velocity: CGFloat, animations: @escaping () -> Void) {
     
-    UIView.animateWithDuration(duration, delay: delay, usingSpringWithDamping: damping, initialSpringVelocity: velocity, options: [UIViewAnimationOptions.CurveEaseOut], animations: {
+    UIView.animate(withDuration: duration, delay: delay, usingSpringWithDamping: damping, initialSpringVelocity: velocity, options: [UIView.AnimationOptions.curveEaseOut], animations: {
             animations()
         }, completion: nil)
 }
 
-public func animate(duration: NSTimeInterval, delay: NSTimeInterval, animations: () -> Void, completion: () -> Void) {
+public func animate(duration: TimeInterval, delay: TimeInterval, animations: @escaping () -> Void, completion: @escaping () -> Void) {
     
-    UIView.animateWithDuration(duration, delay: delay, options: [], animations: {
+    UIView.animate(withDuration: duration, delay: delay, options: [], animations: {
         animations()
         }, completion: { finished in
             completion()
     })
 }
 
-public func animate(duration: NSTimeInterval, delay: NSTimeInterval, animations: () -> Void) {
+public func animate(duration: TimeInterval, delay: TimeInterval, animations: @escaping () -> Void) {
     
-    UIView.animateWithDuration(duration, delay: delay, options: [], animations: {
+    UIView.animate(withDuration: duration, delay: delay, options: [], animations: {
         animations()
         }, completion: { finished in
     })
@@ -93,6 +93,6 @@ public func randomNumber(cap: Int) -> CGFloat {
 }
 
 public func randomNumber(cap: CGFloat) -> CGFloat {
-    return randomNumber(Int(cap))
+    return randomNumber(cap: Int(cap))
 }
 
